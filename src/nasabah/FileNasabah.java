@@ -1,4 +1,4 @@
-package Tubes.nasabah;
+package nasabah;
 
 import java.util.Scanner;
 import java.io.*;
@@ -6,6 +6,9 @@ import java.io.*;
 public class FileNasabah {
     Scanner inputUser = new Scanner(System.in);
     BufferedReader inputUserBuffer = new BufferedReader(new InputStreamReader(System.in));
+
+    // Arahkan Directory
+    String directory = "D:\\IdeaProjects\\ATM\\src\\";
 
     public void TambahNasabah(){
         Nasabah N = new Nasabah();
@@ -25,8 +28,8 @@ public class FileNasabah {
         ObjectInputStream in = null;
 
         // Definisikan Lokasi File
-        File fNasabah = new File("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat");
-        File fNasabahTemporary = new File("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabahTemporary.dat");
+        File fNasabah = new File(directory+"nasabah\\nasabah.dat");
+        File fNasabahTemporary = new File(directory+"nasabah\\nasabahTemporary.dat");
 
         // Cek Apakah File Sudah Ada Atau Belum
         // Jika Belum Maka File Akan Dibuat
@@ -42,11 +45,10 @@ public class FileNasabah {
         // Copy Isi Dari File Nasabah ke Temporary
         try {
             in = new ObjectInputStream(new FileInputStream(fNasabah));
-            Object curR = in.readObject();
-
             out = new ObjectOutputStream(new FileOutputStream(fNasabahTemporary));
 
             try {
+                Object curR = in.readObject();
                 while (true){
                     N = (Nasabah) curR;
                     out.writeObject(N);
@@ -155,14 +157,15 @@ public class FileNasabah {
         ObjectInputStream in = null;
         ObjectOutputStream out = null;
 
+        // Definisikan Lokasi File
+        File fNasabah = new File(directory+"nasabah\\nasabah.dat");
+        File fNasabahTemporary = new File(directory+"nasabah\\nasabahTemporary.dat");
+
         try {
-            in = new ObjectInputStream(new FileInputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat"+ ""));
+            in = new ObjectInputStream(new FileInputStream(fNasabah));
             Object curR = in.readObject();
 
-            out = new ObjectOutputStream(new FileOutputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabahTemporary.dat"+ ""));
-
+            out = new ObjectOutputStream(new FileOutputStream(fNasabahTemporary));
 
             try {
                 System.out.println("---------- Hapus Nasabah ----------");
@@ -204,12 +207,10 @@ public class FileNasabah {
 
 
         try {
-            in = new ObjectInputStream(new FileInputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabahTemporary.dat"+ ""));
+            in = new ObjectInputStream(new FileInputStream(fNasabahTemporary));
             Object curR = in.readObject();
 
-            out = new ObjectOutputStream(new FileOutputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat"+ ""));
+            out = new ObjectOutputStream(new FileOutputStream(fNasabah));
 
 
             try {
@@ -246,17 +247,20 @@ public class FileNasabah {
 
         int total = 0;
 
-        System.out.println("---------- Edit Nasabah ----------");
         ObjectInputStream in = null;
         ObjectOutputStream out = null;
 
+        // Definisikan Lokasi File
+        File fNasabah = new File(directory+"nasabah\\nasabah.dat");
+        File fNasabahTemporary = new File(directory+"nasabah\\nasabahTemporary.dat");
+
+        System.out.println("------------------ Edit Nasabah ------------------");
+
         try {
-            in = new ObjectInputStream(new FileInputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat"+ ""));
+            in = new ObjectInputStream(new FileInputStream(fNasabah));
             Object curR = in.readObject();
 
-            out = new ObjectOutputStream(new FileOutputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabahTemporary.dat"+ ""));
+            out = new ObjectOutputStream(new FileOutputStream(fNasabahTemporary));
 
             try {
                 System.out.print("Masukan No Rekening Yang Datanya Ingin Anda Ubah : ");
@@ -280,17 +284,11 @@ public class FileNasabah {
 
             if (ketemu == true){
                 System.out.println("Nasabah Ditemukan");
-                System.out.println("No Rekening : " + N.getNoRekening());
-                System.out.println("PIN : " + N.getPin());
-                System.out.println("Nama : " + N.getNama());
-                System.out.println("Jenis Kelamin : " + N.getJenisKelamin());
-                System.out.println("Tanggal Lahir : " + N.getTanggalLahir());
-                System.out.println("Pekerjaan : " + N.getPekerjaan());
-                System.out.println("Alamat : " + N.getAlamat());
-                System.out.println("Saldo : " + N.getSaldo());
+                System.out.printf("%-15s %-8s %-20s %-15s %-20s %-15s %-15s %-15s\n", "No Rekening", "PIN", "Nama", "Jenis Kelamin", "Tanggal Lahir", "Pekerjaan", "Alamat", "Saldo");
+                System.out.printf("%-15d %-8d %-20s %-15s %-20s %-15s %-15s %-15d\n", N.getNoRekening(), N.getPin(), N.getNama(), N.getJenisKelamin(), N.getTanggalLahir(), N.getPekerjaan(), N.getAlamat(), N.getSaldo());
 
                 System.out.println();
-                System.out.print("Masukan Data Yang Ingin Diubah : ");
+                System.out.println("Masukan Data Yang Ingin Diubah : ");
                 System.out.print("PIN  : ");
                 pin = inputUser.nextInt();
                 N.setPin(pin);
@@ -367,12 +365,11 @@ public class FileNasabah {
 
 
         try {
-            in = new ObjectInputStream(new FileInputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabahTemporary.dat"+ ""));
+            in = new ObjectInputStream(new FileInputStream(fNasabahTemporary));
             Object curR = in.readObject();
 
             out = new ObjectOutputStream(new FileOutputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat"+ ""));
+                    (fNasabah));
 
             total = 0;
 
@@ -407,35 +404,31 @@ public class FileNasabah {
         int total = 0;
         ObjectInputStream in = null;
 
+        // Deklarasikan Lokasi File
+        File fNasabah = new File(directory+"nasabah\\nasabah.dat");
+
         try {
-            in = new ObjectInputStream(new FileInputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat"));
+            in = new ObjectInputStream(new FileInputStream(fNasabah));
             Object curR = in.readObject();
 
             try {
-
+                System.out.println("-------------------------------------------------------- Data Nasabah -------------------------------------------------------");
+                System.out.printf("%-15s %-8s %-20s %-15s %-20s %-15s %-15s %-15s\n", "No Rekening", "PIN", "Nama", "Jenis Kelamin", "Tanggal Lahir", "Pekerjaan", "Alamat", "Saldo");
                 while (true) {
                     N = (Nasabah) curR;
-                    System.out.println("Data Nasabah ke " + (total+1));
-                    System.out.println("No Rekening : " + N.getNoRekening());
-                    System.out.println("PIN : " + N.getPin());
-                    System.out.println("Nama : " + N.getNama());
-                    System.out.println("Jenis Kelamin : " + N.getJenisKelamin());
-                    System.out.println("Tanggal Lahir : " + N.getTanggalLahir());
-                    System.out.println("Pekerjaan : " + N.getPekerjaan());
-                    System.out.println("Alamat : " + N.getAlamat());
-                    System.out.println("Saldo : " + N.getSaldo());
-                    System.out.println("");
+                    System.out.printf("%-15d %-8d %-20s %-15s %-20s %-15s %-15s %-15d\n", N.getNoRekening(), N.getPin(), N.getNama(), N.getJenisKelamin(), N.getTanggalLahir(), N.getPekerjaan(), N.getAlamat(), N.getSaldo());
                     total++;
                     curR = in.readObject();
                 }
             } catch (EOFException e) {
-                System.out.println("Total Nasabah : \n"+total);
+                System.out.println("");
+                System.out.println("Total Nasabah : "+total);
             } catch (ClassNotFoundException e) {
                 System.out.println("Class tidak ditemukan");
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.println("-----------------------------------------------------------------------------------------------------------------------------");
             in.close();
         } catch (ClassNotFoundException | IOException e){
             e.printStackTrace();

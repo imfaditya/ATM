@@ -1,4 +1,4 @@
-package Tubes.nasabah;
+package nasabah;
 
 public class Nasabah implements java.io.Serializable{
     //Record dari nasabah

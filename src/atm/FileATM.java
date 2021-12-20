@@ -1,6 +1,6 @@
-package Tubes.atm;
+package atm;
 
-import Tubes.nasabah.Nasabah;
+import nasabah.Nasabah;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -12,8 +12,8 @@ public class FileATM {
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     LocalDateTime now = LocalDateTime.now();
 
-    // Arahkan Directory Ke Package Tubes
-    String directory = "D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\";
+    // Arahkan Directory
+    String directory = "D:\\IdeaProjects\\ATM\\src\\";
 
     int Login(){
         int noRekening;
@@ -166,12 +166,10 @@ public class FileATM {
 
         // Copy Ulang Semua Data Dari Temporary Telah Selesai Dimanipulasi ke File Nasabah
         try {
-            in = new ObjectInputStream(new FileInputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabahTemporary.dat"+ ""));
+            in = new ObjectInputStream(new FileInputStream(fNasabahTemporary));
             Object curR = in.readObject();
 
-            out = new ObjectOutputStream(new FileOutputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat"+ ""));
+            out = new ObjectOutputStream(new FileOutputStream(fNasabah));
 
             total = 0;
 
@@ -289,12 +287,11 @@ public class FileATM {
 
         // Copy Ulang Semua Data Dari Temporary Telah Selesai Dimanipulasi ke File Nasabah
         try {
-            in = new ObjectInputStream(new FileInputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabahTemporary.dat"+ ""));
+            in = new ObjectInputStream(new FileInputStream(fNasabahTemporary));
             Object curR = in.readObject();
 
             out = new ObjectOutputStream(new FileOutputStream
-                    ("D:\\IdeaProjects\\AlgoritmaPemrograman\\src\\Tubes\\nasabah\\nasabah.dat"+ ""));
+                    (fNasabah));
 
             total = 0;
 

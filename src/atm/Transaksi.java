@@ -1,4 +1,4 @@
-package Tubes.atm;
+package atm;
 
 public class Transaksi implements java.io.Serializable{
     int noRekening;
