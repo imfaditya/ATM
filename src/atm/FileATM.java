@@ -15,7 +15,7 @@ public class FileATM {
     // Arahkan Directory
     String directory = "D:\\IdeaProjects\\ATM\\src\\";
 
-    int Login(){
+    public int Login(){
         int noRekening;
         int pin;
         boolean ketemu = false;
@@ -77,12 +77,13 @@ public class FileATM {
         }
     }
 
-    int mainMenuATM(){
+    public int mainMenuATM(){
         System.out.println("---------- ATM Bank ABC ---------");
         System.out.println("1. Setor Tunai");
         System.out.println("2. Tarik Tunai");
         System.out.println("3. Tampilkan Saldo");
         System.out.println("4. Mutasi Rekening");
+        System.out.println("5. Transfer");
         System.out.println("0. Exit");
         System.out.print("Masukan Pilihan : ");
         int pilihan = inputUser.nextInt();
@@ -249,7 +250,6 @@ public class FileATM {
                 if (jumlahTarikan > N.getSaldo()){
                     System.out.println("Gagal ! Jumlah Tarikan Terlalu Besar");
                     out.writeObject(N);
-
                 } else {
                     total = N.getSaldo() - jumlahTarikan;
                     N.setSaldo(total);
@@ -327,7 +327,7 @@ public class FileATM {
         }
     }
 
-    void tampilSaldo(int noRekening){
+    public void tampilSaldo(int noRekening){
         ObjectInputStream in = null;
         Nasabah N = new Nasabah();
 
@@ -357,7 +357,7 @@ public class FileATM {
         }
     }
 
-    void tulisTransaksi(Transaksi t) {
+    public void tulisTransaksi(Transaksi t) {
         Transaksi T = new Transaksi();
         ObjectOutputStream out = null;
         ObjectInputStream in = null;
@@ -427,7 +427,7 @@ public class FileATM {
         }
     }
 
-    void mutasiRekening(int noRekening){
+    public void mutasiRekening(int noRekening){
         ObjectInputStream in = null;
         Transaksi T = new Transaksi();
 
@@ -457,6 +457,99 @@ public class FileATM {
         }
     }
 
+    public void transfer(int noRekening){
+        Nasabah N = new Nasabah();
+        Transaksi T = new Transaksi();
+
+        int rekeningTujuan;
+        int saldo;
+        int nominal;
+        boolean suksesTerima = false;
+        boolean suksesKirim = false;
+
+        ObjectInputStream in = null;
+        ObjectOutputStream out = null;
+
+        System.out.println("----------------- Transfer Saldo -----------------");
+        System.out.print("Masukan No Rekening Tujuan : ");
+        rekeningTujuan = inputUser.nextInt();
+        if (rekeningTujuan == noRekening){
+            System.out.println("Tidak Bisa Transfer ke Rekening Sendiri !");
+        } else{
+            System.out.print("Masukan Nominal Transfer : ");
+            nominal = inputUser.nextInt();
+
+            File fNasabah = new File(directory+"nasabah//nasabah.dat");
+            File fNasabahTemporary = new File(directory+"atm//nasabahTemporary.dat");
+
+            try {
+                in = new ObjectInputStream(new FileInputStream(fNasabah));
+                out = new ObjectOutputStream(new FileOutputStream(fNasabahTemporary));
+                try {
+                    Object curR = in.readObject();
+                    while (suksesKirim == false || suksesTerima == false){
+                        N = (Nasabah) curR;
+                        if (N.getNoRekening() == noRekening){
+                            if (nominal < N.getSaldo()){
+                                saldo = N.getSaldo() - nominal;
+                                N.setSaldo(saldo);
+                                suksesKirim = true;
+                            }
+                        } else if (N.getNoRekening() == rekeningTujuan){
+                            saldo = N.getSaldo() + nominal;
+                            N.setSaldo(saldo);
+                            suksesTerima = true;
+                        }
+                        out.writeObject(N);
+                        curR = in.readObject();
+                    }
+                    in.close();
+                    out.close();
+                } catch (EOFException e){
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            if (suksesKirim == true && suksesTerima == true){
+                try {
+                    in = new ObjectInputStream(new FileInputStream(fNasabahTemporary));
+                    out = new ObjectOutputStream((new FileOutputStream(fNasabah)));
+                    try {
+                        Object curR = in.readObject();
+                        while (true) {
+                            N = (Nasabah) curR;
+                            out.writeObject(N);
+                            curR = in.readObject();
+                        }
+                    } catch (EOFException e) {
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+
+                String tanggal = dtf.format(now);
+                T = new Transaksi(noRekening, tanggal, "Trasnfer Keluar", nominal);
+                tulisTransaksi(T);
+
+                T = new Transaksi(rekeningTujuan, tanggal, "Transfer Masuk", nominal);
+                tulisTransaksi(T);
+            } else {
+                System.out.println("Transfer Gagal ! Nominal Saldo Transfer Terlalu Besar");
+            }
+            System.out.println("--------------------------------------------------\n");
+        }
+
+    }
+
     public static void main(String[] args) {
         FileATM FA = new FileATM();
 
@@ -467,7 +560,6 @@ public class FileATM {
             currentNoRek = FA.Login();
             i++;
         }
-
 
         if (currentNoRek != 0) {
             int pilihan = FA.mainMenuATM();
@@ -484,6 +576,9 @@ public class FileATM {
                         break;
                     case 4:
                         FA.mutasiRekening(currentNoRek);
+                        break;
+                    case 5 :
+                        FA.transfer(currentNoRek);
                         break;
                     default:
                         System.out.println("Pilihan Anda Tidak Ada di Menu");
